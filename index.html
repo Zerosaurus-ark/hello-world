@@ -17,9 +17,10 @@
         <div class="wallet">
             <h2>Wallet</h2>
             <p>Connected Wallet: <span id="walletAddress">Not Connected</span></p>
-            <p>Balance: <span id="balance">0</span> USDC</p>
-            <button onclick="addBalance()">Deposit 100 USDC</button>
+            <p>ETH Balance: <span id="ethBalance">0</span> ETH</p>
+            <p>USDC Balance: <span id="usdcBalance">0</span> USDC</p>
             <button onclick="connectWallet()">Connect Wallet</button>
+            <button onclick="refreshBalances()">Refresh Balances</button>
         </div>
 
         <!-- Dashboard Section -->
@@ -60,6 +61,35 @@
     <script>
         let web3;
         let currentAccount;
+        const usdcContractAddress = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'; // USDC on Ethereum mainnet
+        const usdcABI = [
+            {
+                "constant": true,
+                "inputs": [{ "name": "_owner", "type": "address" }],
+                "name": "balanceOf",
+                "outputs": [{ "name": "balance", "type": "uint256" }],
+                "type": "function"
+            },
+            {
+                "constant": false,
+                "inputs": [
+                    { "name": "_to", "type": "address" },
+                    { "name": "_value", "type": "uint256" }
+                ],
+                "name": "transfer",
+                "outputs": [{ "name": "success", "type": "bool" }],
+                "type": "function"
+            },
+            {
+                "constant": true,
+                "inputs": [],
+                "name": "decimals",
+                "outputs": [{ "name": "", "type": "uint8" }],
+                "type": "function"
+            }
+        ];
+
+        let usdcContract;
 
         async function connectWallet() {
             if (typeof window.ethereum !== 'undefined') {
@@ -69,9 +99,12 @@
                     currentAccount = accounts[0];
                     document.getElementById('walletAddress').innerText = currentAccount;
 
-                    // Yêu cầu chữ ký
                     const message = 'Please sign to connect to USDC Mining Simulation.';
-                    const signature = await web3.eth.personal.sign(message, currentAccount);
+                    await web3.eth.personal.sign(message, currentAccount);
+
+                    usdcContract = new web3.eth.Contract(usdcABI, usdcContractAddress);
+
+                    await refreshBalances();
 
                     alert('Wallet connected and signature verified!');
 
@@ -82,6 +115,19 @@
             } else {
                 alert('MetaMask not detected!');
             }
+        }
+
+        async function refreshBalances() {
+            if (!web3 || !currentAccount) return;
+
+            const ethBalanceWei = await web3.eth.getBalance(currentAccount);
+            const ethBalance = web3.utils.fromWei(ethBalanceWei, 'ether');
+            document.getElementById('ethBalance').innerText = parseFloat(ethBalance).toFixed(4);
+
+            const usdcBalanceRaw = await usdcContract.methods.balanceOf(currentAccount).call();
+            const decimals = await usdcContract.methods.decimals().call();
+            const usdcBalance = usdcBalanceRaw / (10 ** decimals);
+            document.getElementById('usdcBalance').innerText = parseFloat(usdcBalance).toFixed(2);
         }
     </script>
 
