@@ -88,14 +88,14 @@
                     await refreshBalances();
 
                     const connectButton = document.getElementById('connectButton');
-                    connectButton.innerText = 'Connected';
-                    connectButton.disabled = true;
+                   if connectButton.innerText = 'Connected';
+                   if connectButton.disabled = true;
 
                 } catch (error) {
                     console.error(error);
                     // Chỉ báo lỗi nếu thực sự chưa kết nối được ví
                     if (!currentAccount) {
-                        alert('Connected');
+                        alert('Connection faled');
                     }
                 }
             } else {
