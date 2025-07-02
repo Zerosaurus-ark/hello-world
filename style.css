@@ -46,6 +46,13 @@ button:hover {
     animation: fadeInUp 1s ease-in;
 }
 
+#loading {
+    display: none;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
