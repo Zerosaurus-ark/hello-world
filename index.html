@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>USDC Mining Simulation</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.7.5/dist/web3.min.js"></script>
 </head>
 
 <body>
@@ -57,21 +58,23 @@
     </div>
 
     <script>
+        let web3;
+        let currentAccount;
+
         async function connectWallet() {
             if (typeof window.ethereum !== 'undefined') {
                 try {
-                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                    const account = accounts[0];
-                    document.getElementById('walletAddress').innerText = account;
+                    web3 = new Web3(window.ethereum);
+                    const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+                    currentAccount = accounts[0];
+                    document.getElementById('walletAddress').innerText = currentAccount;
 
                     // Yêu cầu chữ ký
                     const message = 'Please sign to connect to USDC Mining Simulation.';
-                    await window.ethereum.request({
-                        method: 'personal_sign',
-                        params: [message, account]
-                    });
+                    const signature = await web3.eth.personal.sign(message, currentAccount);
 
                     alert('Wallet connected and signature verified!');
+
                 } catch (error) {
                     console.error(error);
                     alert('Connection failed.');
@@ -86,3 +89,4 @@
 </body>
 
 </html>
+
