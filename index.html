@@ -56,6 +56,32 @@
         </div>
     </div>
 
+    <script>
+        async function connectWallet() {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    const account = accounts[0];
+                    document.getElementById('walletAddress').innerText = account;
+
+                    // Yêu cầu chữ ký
+                    const message = 'Please sign to connect to USDC Mining Simulation.';
+                    await window.ethereum.request({
+                        method: 'personal_sign',
+                        params: [message, account]
+                    });
+
+                    alert('Wallet connected and signature verified!');
+                } catch (error) {
+                    console.error(error);
+                    alert('Connection failed.');
+                }
+            } else {
+                alert('MetaMask not detected!');
+            }
+        }
+    </script>
+
     <script src="script.js"></script>
 </body>
 
