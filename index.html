@@ -12,13 +12,16 @@
     <div class="container">
         <h1>USDC Mining Simulation</h1>
 
+        <!-- Wallet Section -->
         <div class="wallet">
             <h2>Wallet</h2>
+            <p>Connected Wallet: <span id="walletAddress">Not Connected</span></p>
             <p>Balance: <span id="balance">0</span> USDC</p>
             <button onclick="addBalance()">Deposit 100 USDC</button>
-            <button onclick="connectWallet()">Connect Wallet (Fake)</button>
+            <button onclick="connectWallet()">Connect Wallet</button>
         </div>
 
+        <!-- Dashboard Section -->
         <div class="dashboard">
             <h2>Dashboard</h2>
             <p>USDC Mined: <span id="usdcMined">0</span> USDC</p>
@@ -27,6 +30,7 @@
             <div id="loading">Claiming...</div>
         </div>
 
+        <!-- NFT Shop Section -->
         <div class="shop">
             <h2>NFT Shop</h2>
 
