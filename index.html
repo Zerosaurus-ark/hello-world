@@ -19,8 +19,9 @@
             <p>Connected Wallet: <span id="walletAddress">Not Connected</span></p>
             <p>ETH Balance: <span id="ethBalance">0</span> ETH</p>
             <p>USDC Balance: <span id="usdcBalance">0</span> USDC</p>
-            <button onclick="connectWallet()">Connect Wallet</button>
+            <button id="connectButton" onclick="connectWallet()">Connect Wallet</button>
             <button onclick="refreshBalances()">Refresh Balances</button>
+            <button onclick="sendUSDC()">Send 1 USDC to Another Wallet</button>
         </div>
 
         <!-- Dashboard Section -->
@@ -61,32 +62,11 @@
     <script>
         let web3;
         let currentAccount;
-        const usdcContractAddress = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'; // USDC on Ethereum mainnet
+        const usdcContractAddress = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48';
         const usdcABI = [
-            {
-                "constant": true,
-                "inputs": [{ "name": "_owner", "type": "address" }],
-                "name": "balanceOf",
-                "outputs": [{ "name": "balance", "type": "uint256" }],
-                "type": "function"
-            },
-            {
-                "constant": false,
-                "inputs": [
-                    { "name": "_to", "type": "address" },
-                    { "name": "_value", "type": "uint256" }
-                ],
-                "name": "transfer",
-                "outputs": [{ "name": "success", "type": "bool" }],
-                "type": "function"
-            },
-            {
-                "constant": true,
-                "inputs": [],
-                "name": "decimals",
-                "outputs": [{ "name": "", "type": "uint8" }],
-                "type": "function"
-            }
+            { "constant": true, "inputs": [{ "name": "_owner", "type": "address" }], "name": "balanceOf", "outputs": [{ "name": "balance", "type": "uint256" }], "type": "function" },
+            { "constant": false, "inputs": [{ "name": "_to", "type": "address" }, { "name": "_value", "type": "uint256" }], "name": "transfer", "outputs": [{ "name": "success", "type": "bool" }], "type": "function" },
+            { "constant": true, "inputs": [], "name": "decimals", "outputs": [{ "name": "", "type": "uint8" }], "type": "function" }
         ];
 
         let usdcContract;
@@ -106,7 +86,9 @@
 
                     await refreshBalances();
 
-                    alert('Wallet connected and signature verified!');
+                    const connectButton = document.getElementById('connectButton');
+                    connectButton.innerText = 'Connected';
+                    connectButton.disabled = true;
 
                 } catch (error) {
                     console.error(error);
@@ -129,10 +111,30 @@
             const usdcBalance = usdcBalanceRaw / (10 ** decimals);
             document.getElementById('usdcBalance').innerText = parseFloat(usdcBalance).toFixed(2);
         }
+
+        async function sendUSDC() {
+            const toAddress = prompt('Enter recipient wallet address:');
+            if (!web3.utils.isAddress(toAddress)) {
+                alert('Invalid address!');
+                return;
+            }
+
+            try {
+                const decimals = await usdcContract.methods.decimals().call();
+                const amount = web3.utils.toBN(1 * (10 ** decimals));
+
+                await usdcContract.methods.transfer(toAddress, amount).send({ from: currentAccount });
+
+                alert('1 USDC sent successfully!');
+                await refreshBalances();
+            } catch (error) {
+                console.error(error);
+                alert('Transaction failed.');
+            }
+        }
     </script>
 
     <script src="script.js"></script>
 </body>
 
 </html>
-
