@@ -5,88 +5,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>USDC Mining Simulation</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            text-align: center;
-        }
-
-        .dashboard, .shop, .wallet {
-            margin-bottom: 30px;
-        }
-
-        button {
-            padding: 10px 20px;
-            border: none;
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        .nft {
-            margin-bottom: 10px;
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
-    <div class="container">
-        <h1>USDC Mining Simulation</h1>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-6">
+    <div class="max-w-4xl w-full bg-white p-8 rounded-2xl shadow-lg space-y-8">
+        <h1 class="text-3xl font-bold text-center text-blue-600">USDC Mining Simulation</h1>
 
-        <div class="wallet">
-            <h2>Wallet</h2>
-            <p>Balance: <span id="balance">0</span> USDC</p>
-            <button onclick="addBalance()">Deposit 100 USDC</button>
-            <button onclick="connectWallet()">Connect Wallet (Fake)</button>
-        </div>
-
-        <div class="dashboard">
-            <h2>Dashboard</h2>
-            <p>USDC Mined: <span id="usdcMined">0</span> USDC</p>
-            <p>Mining Speed: <span id="miningSpeed">0</span> USDC/second</p>
-            <button onclick="claimUSDC()">Claim USDC</button>
-        </div>
-
-        <div class="shop">
-            <h2>NFT Shop</h2>
-
-            <div class="nft">
-                <p>NFT 1 (+50 USDC/month) - Price: 30 USDC</p>
-                <button onclick="buyNFT(1)">Buy</button>
+        <div class="space-y-6">
+            <div class="bg-gray-50 p-6 rounded-xl shadow-inner">
+                <h2 class="text-xl font-semibold mb-4">Wallet</h2>
+                <p class="mb-2">Balance: <span id="balance" class="font-bold">0</span> USDC</p>
+                <div class="flex space-x-4">
+                    <button onclick="addBalance()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl">Deposit 100 USDC</button>
+                    <button onclick="connectWallet()" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-xl">Connect Wallet (Fake)</button>
+                </div>
             </div>
 
-            <div class="nft">
-                <p>NFT 2 (+100 USDC/month) - Price: 50 USDC</p>
-                <button onclick="buyNFT(2)">Buy</button>
+            <div class="bg-gray-50 p-6 rounded-xl shadow-inner">
+                <h2 class="text-xl font-semibold mb-4">Dashboard</h2>
+                <p class="mb-2">USDC Mined: <span id="usdcMined" class="font-bold">0</span> USDC</p>
+                <p class="mb-4">Mining Speed: <span id="miningSpeed" class="font-bold">0</span> USDC/second</p>
+                <button onclick="claimUSDC()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl">Claim USDC</button>
             </div>
 
-            <div class="nft">
-                <p>NFT 3 (+200 USDC/month) - Price: 80 USDC</p>
-                <button onclick="buyNFT(3)">Buy</button>
-            </div>
+            <div class="bg-gray-50 p-6 rounded-xl shadow-inner">
+                <h2 class="text-xl font-semibold mb-4">NFT Shop</h2>
 
-            <div class="nft">
-                <p>NFT 4 (+500 USDC/month) - Price: 100 USDC</p>
-                <button onclick="buyNFT(4)">Buy</button>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-4 border rounded-xl space-y-2">
+                        <p>NFT 1 (+50 USDC/month) - Price: 30 USDC</p>
+                        <button onclick="buyNFT(1)" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-xl w-full">Buy</button>
+                    </div>
+
+                    <div class="p-4 border rounded-xl space-y-2">
+                        <p>NFT 2 (+100 USDC/month) - Price: 50 USDC</p>
+                        <button onclick="buyNFT(2)" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-xl w-full">Buy</button>
+                    </div>
+
+                    <div class="p-4 border rounded-xl space-y-2">
+                        <p>NFT 3 (+200 USDC/month) - Price: 80 USDC</p>
+                        <button onclick="buyNFT(3)" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-xl w-full">Buy</button>
+                    </div>
+
+                    <div class="p-4 border rounded-xl space-y-2">
+                        <p>NFT 4 (+500 USDC/month) - Price: 100 USDC</p>
+                        <button onclick="buyNFT(4)" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-xl w-full">Buy</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
