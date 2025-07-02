@@ -10,23 +10,30 @@ const miningRates = {
     4: { speed: 500 / 2592000, price: 100 },
 };
 
+const clickSound = new Audio('https://www.soundjay.com/buttons/sounds/button-16.mp3');
+
 window.onload = () => {
-    document.getElementById('balance').innerText = balance.toFixed(2);
-    document.getElementById('usdcMined').innerText = usdcMined.toFixed(6);
-    document.getElementById('miningSpeed').innerText = miningSpeed.toFixed(6);
+    updateUI();
 
     setInterval(() => {
         usdcMined += miningSpeed;
-        document.getElementById('usdcMined').innerText = usdcMined.toFixed(6);
+        animateNumber('usdcMined', usdcMined);
         localStorage.setItem('usdcMined', usdcMined);
     }, 1000);
 };
 
+function updateUI() {
+    document.getElementById('balance').innerText = balance.toFixed(2);
+    document.getElementById('usdcMined').innerText = usdcMined.toFixed(6);
+    document.getElementById('miningSpeed').innerText = miningSpeed.toFixed(6);
+}
+
 function addBalance() {
     balance += 100;
-    document.getElementById('balance').innerText = balance.toFixed(2);
-    localStorage.setItem('balance', balance);
     animateButton('Deposit 100 USDC');
+    clickSound.play();
+    updateUI();
+    localStorage.setItem('balance', balance);
 }
 
 function buyNFT(nftType) {
@@ -34,8 +41,8 @@ function buyNFT(nftType) {
     if (balance >= nft.price) {
         balance -= nft.price;
         miningSpeed += nft.speed;
-        document.getElementById('balance').innerText = balance.toFixed(2);
-        document.getElementById('miningSpeed').innerText = miningSpeed.toFixed(6);
+        clickSound.play();
+        updateUI();
         localStorage.setItem('balance', balance);
         localStorage.setItem('miningSpeed', miningSpeed);
     } else {
@@ -44,10 +51,14 @@ function buyNFT(nftType) {
 }
 
 function claimUSDC() {
-    alert(`You claimed ${usdcMined.toFixed(2)} USDC!`);
-    usdcMined = 0;
-    document.getElementById('usdcMined').innerText = usdcMined.toFixed(6);
-    localStorage.setItem('usdcMined', usdcMined);
+    document.getElementById('loading').style.display = 'block';
+    setTimeout(() => {
+        alert(`You claimed ${usdcMined.toFixed(2)} USDC!`);
+        usdcMined = 0;
+        updateUI();
+        localStorage.setItem('usdcMined', usdcMined);
+        document.getElementById('loading').style.display = 'none';
+    }, 1500);
 }
 
 function connectWallet() {
@@ -65,3 +76,22 @@ function animateButton(buttonText) {
         }
     });
 }
+
+function animateNumber(elementId, targetNumber) {
+    const element = document.getElementById(elementId);
+    let currentNumber = parseFloat(element.innerText);
+    const step = (targetNumber - currentNumber) / 20;
+
+    let count = 0;
+    const interval = setInterval(() => {
+        if (count < 20) {
+            currentNumber += step;
+            element.innerText = currentNumber.toFixed(6);
+            count++;
+        } else {
+            clearInterval(interval);
+            element.innerText = targetNumber.toFixed(6);
+        }
+    }, 30);
+}
+
