@@ -77,10 +77,11 @@
                     web3 = new Web3(window.ethereum);
                     const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
                     currentAccount = accounts[0];
-                    document.getElementById('walletAddress').innerText = currentAccount;
 
                     const message = 'Please sign to connect to USDC Mining Simulation.';
                     await web3.eth.personal.sign(message, currentAccount);
+
+                    document.getElementById('walletAddress').innerText = currentAccount;
 
                     usdcContract = new web3.eth.Contract(usdcABI, usdcContractAddress);
 
@@ -92,7 +93,10 @@
 
                 } catch (error) {
                     console.error(error);
-                    alert('Connection failed.');
+                    // Chỉ báo lỗi nếu thực sự chưa kết nối được ví
+                    if (!currentAccount) {
+                        alert('Connection failed.');
+                    }
                 }
             } else {
                 alert('MetaMask not detected!');
