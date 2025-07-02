@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USDC Mining Simulation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .dashboard, .shop, .wallet {
+            margin-bottom: 30px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .nft {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>USDC Mining Simulation</h1>
+
+        <div class="wallet">
+            <h2>Wallet</h2>
+            <p>Balance: <span id="balance">0</span> USDC</p>
+            <button onclick="addBalance()">Deposit 100 USDC</button>
+            <button onclick="connectWallet()">Connect Wallet (Fake)</button>
+        </div>
+
+        <div class="dashboard">
+            <h2>Dashboard</h2>
+            <p>USDC Mined: <span id="usdcMined">0</span> USDC</p>
+            <p>Mining Speed: <span id="miningSpeed">0</span> USDC/second</p>
+            <button onclick="claimUSDC()">Claim USDC</button>
+        </div>
+
+        <div class="shop">
+            <h2>NFT Shop</h2>
+
+            <div class="nft">
+                <p>NFT 1 (+50 USDC/month) - Price: 30 USDC</p>
+                <button onclick="buyNFT(1)">Buy</button>
+            </div>
+
+            <div class="nft">
+                <p>NFT 2 (+100 USDC/month) - Price: 50 USDC</p>
+                <button onclick="buyNFT(2)">Buy</button>
+            </div>
+
+            <div class="nft">
+                <p>NFT 3 (+200 USDC/month) - Price: 80 USDC</p>
+                <button onclick="buyNFT(3)">Buy</button>
+            </div>
+
+            <div class="nft">
+                <p>NFT 4 (+500 USDC/month) - Price: 100 USDC</p>
+                <button onclick="buyNFT(4)">Buy</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let balance = parseFloat(localStorage.getItem('balance')) || 0;
+        let usdcMined = parseFloat(localStorage.getItem('usdcMined')) || 0;
+        let miningSpeed = parseFloat(localStorage.getItem('miningSpeed')) || 0;
+
+        const miningRates = {
+            1: { speed: 50 / 2592000, price: 30 },
+            2: { speed: 100 / 2592000, price: 50 },
+            3: { speed: 200 / 2592000, price: 80 },
+            4: { speed: 500 / 2592000, price: 100 },
+        };
+
+        document.getElementById('balance').innerText = balance.toFixed(2);
+        document.getElementById('usdcMined').innerText = usdcMined.toFixed(6);
+        document.getElementById('miningSpeed').innerText = miningSpeed.toFixed(6);
+
+        setInterval(() => {
+            usdcMined += miningSpeed;
+            document.getElementById('usdcMined').innerText = usdcMined.toFixed(6);
+            localStorage.setItem('usdcMined', usdcMined);
+        }, 1000);
+
+        function addBalance() {
+            balance += 100;
+            document.getElementById('balance').innerText = balance.toFixed(2);
+            localStorage.setItem('balance', balance);
+        }
+
+        function buyNFT(nftType) {
+            const nft = miningRates[nftType];
+            if (balance >= nft.price) {
+                balance -= nft.price;
+                miningSpeed += nft.speed;
+                document.getElementById('balance').innerText = balance.toFixed(2);
+                document.getElementById('miningSpeed').innerText = miningSpeed.toFixed(6);
+                localStorage.setItem('balance', balance);
+                localStorage.setItem('miningSpeed', miningSpeed);
+            } else {
+                alert('Not enough USDC!');
+            }
+        }
+
+        function claimUSDC() {
+            alert(`You claimed ${usdcMined.toFixed(2)} USDC!`);
+            usdcMined = 0;
+            document.getElementById('usdcMined').innerText = usdcMined.toFixed(6);
+            localStorage.setItem('usdcMined', usdcMined);
+        }
+
+        function connectWallet() {
+            alert('Wallet connected (fake)!');
+        }
+    </script>
+</body>
+
+</html>
